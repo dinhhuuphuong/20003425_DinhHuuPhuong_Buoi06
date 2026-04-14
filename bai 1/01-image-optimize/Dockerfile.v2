@@ -1,0 +1,17 @@
+# V2: 3 stages, bo bot buoc trung gian
+FROM golang:1.22-alpine AS deps
+WORKDIR /src
+COPY app/go.mod ./
+RUN go mod download
+
+FROM deps AS build
+COPY app/main.go ./
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /out/app ./main.go
+
+FROM alpine:3.20
+RUN adduser -D appuser
+WORKDIR /app
+COPY --from=build /out/app /app/app
+USER appuser
+EXPOSE 8080
+ENTRYPOINT ["/app/app"]

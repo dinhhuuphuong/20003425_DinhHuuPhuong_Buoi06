@@ -1,0 +1,9 @@
+# V4: 1 stage (1 container image), don gian de doi chieu
+FROM golang:1.22-alpine
+WORKDIR /src
+COPY app/go.mod ./
+RUN go mod download
+COPY app/main.go ./
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /usr/local/bin/app ./main.go
+EXPOSE 8080
+ENTRYPOINT ["/usr/local/bin/app"]

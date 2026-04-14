@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bai 3 - Monolith</title>
+  <style>
+    body { font-family: Segoe UI, sans-serif; margin: 24px; background: #f4f7fb; color: #1a2a3a; }
+    h1 { margin-bottom: 8px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card { background: white; border-radius: 10px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    pre { margin: 0; white-space: pre-wrap; font-size: 13px; }
+    button { background: #0a7c86; color: #fff; border: 0; padding: 10px 14px; border-radius: 6px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Bai 3 - Monolith</h1>
+  <p>1 BE chua 3 function (users/products/orders) + 1 DB</p>
+  <button onclick="loadData()">Tai du lieu</button>
+  <div class="grid">
+    <div class="card"><h3>Users</h3><pre id="users">-</pre></div>
+    <div class="card"><h3>Products</h3><pre id="products">-</pre></div>
+    <div class="card"><h3>Orders</h3><pre id="orders">-</pre></div>
+  </div>
+  <script>
+    const API = 'http://localhost:5000';
+    async function show(id, path) {
+      const data = await fetch(API + path).then(r => r.json());
+      document.getElementById(id).textContent = JSON.stringify(data, null, 2);
+    }
+    async function loadData() {
+      await Promise.all([
+        show('users', '/api/users'),
+        show('products', '/api/products'),
+        show('orders', '/api/orders')
+      ]);
+    }
+  </script>
+</body>
+</html>
